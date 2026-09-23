@@ -1,4 +1,96 @@
 <resources>
     <string name="app_name">bidai</string>
     <string name="greeting">Hello, World! 👋</string>
+
+    <string name="login_welcome_title">Welcome Back to Bid.ai</string>
+    <string name="login_subtitle">Sign in Your next deal is just a tap away.</string>
+    <string name="login_gmail_label">Gmail</string>
+    <string name="login_gmail_hint">Enter Gmail</string>
+    <string name="login_password_label">Password</string>
+    <string name="login_password_hint">Enter Password</string>
+    <string name="login_sign_in">Sign in</string>
+    <string name="login_no_account">Don\'t you have an account?</string>
+    <string name="login_sign_up">Sign up</string>
+
+    <string name="signup_title_line1">Join BID.ai</string>
+    <string name="signup_title_line2">List fast. Earn smart</string>
+    <string name="signup_subtitle">It only takes a click to start your resale journey</string>
+    <string name="signup_name_label">Name</string>
+    <string name="signup_name_hint">Enter Name</string>
+    <string name="signup_mobile_label">Mobile Number</string>
+    <string name="signup_mobile_hint">Enter Mobile Number</string>
+    <string name="signup_gmail_label">Gmail</string>
+    <string name="signup_gmail_hint">Enter Gmail</string>
+    <string name="signup_create_password_label">Create Password</string>
+    <string name="signup_confirm_password_label">Confirm Password</string>
+    <string name="signup_password_hint">Enter Password</string>
+    <string name="signup_sign_up">Sign Up</string>
+    <string name="signup_have_account">If you already have account ?</string>
+    <string name="signup_sign_in">Sign In</string>
+
+    <string name="error_required_fields">Please fill in all fields</string>
+    <string name="error_password_mismatch">Passwords do not match</string>
+    <string name="error_network">Something went wrong, please try again</string>
+    <string name="error_close">Close</string>
+    <string name="auth_signing_in">Signing in…</string>
+    <string name="auth_signing_up">Creating account…</string>
+    <string name="home_welcome">Welcome, %1$s</string>
+    <string name="home_email">Email: %1$s</string>
+    <string name="home_logout">Log out</string>
+
+    <string name="home_explore_categories">Explore Categories</string>
+    <string name="home_newly_listed_cars">Newly Listed Cars</string>
+    <string name="home_newly_listed_bikes">Newly Listed Budget Bikes</string>
+    <string name="home_recommendations">Recommendations For You</string>
+    <string name="home_sell_buy_title">Sell and buy every thing with BID.AI</string>
+    <string name="home_testimonials">Transact with a trusted local community</string>
+    <string name="home_search_hint">Search For Cars</string>
+    <string name="home_location_default">Taj Retreat, Bengaluru</string>
+    <string name="home_see_all">See all</string>
+    <string name="home_verified">Verified Product</string>
+    <string name="home_eco">Eco : %1$s</string>
+    <string name="home_renew_plan">Renew Plan</string>
+    <string name="home_invite">Invite Friends</string>
+    <string name="home_invite_cta">Invite &amp; Earn</string>
+    <string name="home_invite_body">Sign up using my referral code to earn up to 1 lakh Bid Credits!</string>
+    <string name="home_plan_expiry">Your Plan is About to Expire!</string>
+    <string name="home_plan_expiry_sub">Renew now to keep listing and boosting your products without interruption</string>
+    <string name="home_hero_job_title">Find Your Dream job with BID.AI</string>
+    <string name="home_start_sell_now">Start Sell Now</string>
+
+    <string name="nav_home">Home</string>
+    <string name="nav_sell">Sell</string>
+    <string name="nav_one_click">One click sell</string>
+    <string name="nav_chat">Chat</string>
+    <string name="nav_your_items">Your Items</string>
+
+    <string name="sell_title">Sell your Product</string>
+    <string name="sell_back">Back</string>
+    <string name="sell_select_categories">Select Categories</string>
+    <string name="sell_select_or_take_photo">Select or Take Photo</string>
+    <string name="sell_upload_photos_help">Upload photos (Min 2, Max 5, Video Max 30s)</string>
+    <string name="sell_photos">Photos</string>
+    <string name="sell_delete_photo">Delete photo</string>
+    <string name="sell_as">Sell as</string>
+    <string name="sell_vendor_business">vendor / Business</string>
+    <string name="sell_individual">Individual</string>
+    <string name="sell_brands">Brands</string>
+    <string name="sell_brands_hint">Enter Brands</string>
+    <string name="sell_product_type">Select Product Type</string>
+    <string name="sell_product_type_hint">Type</string>
+    <string name="sell_ad_title">Ad Title</string>
+    <string name="sell_ad_title_hint">Enter Title</string>
+    <string name="sell_description">Description</string>
+    <string name="sell_price">Price</string>
+    <string name="sell_price_hint">Enter price</string>
+    <string name="sell_location">Location</string>
+    <string name="sell_location_hint">Enter Location</string>
+    <string name="sell_upload">Upload</string>
+    <string name="sell_congrats_title">Congratulations</string>
+    <string name="sell_congrats_body">Your product get Approved and its live Now</string>
+    <string name="sell_error_title_required">Ad Title is required</string>
+    <string name="sell_error_price">Enter a valid price</string>
+    <string name="sell_error_min_photos">Minimum 2 photos required</string>
+    <string name="sell_error_max_photos">Maximum 5 photos allowed</string>
+    <string name="sell_error_category">Select a category</string>
 </resources>
