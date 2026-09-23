@@ -1,0 +1,134 @@
+# ── bidai · GitLab CI/CD ────────────────────────────────────────────────
+image: eclipse-temurin:21-jdk
+
+stages:
+  - validate
+  - test
+  - build
+  - release
+
+variables:
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2 -Dorg.gradle.caching=true"
+  ANDROID_SDK_ROOT: "${CI_PROJECT_DIR}/android-sdk"
+  ANDROID_HOME:     "${CI_PROJECT_DIR}/android-sdk"
+
+# ── Cache ─────────────────────────────────────────────────────────────────────
+.gradle-cache: &gradle-cache
+  cache:
+    key:
+      files:
+        - gradle/wrapper/gradle-wrapper.properties
+        - gradle/libs.versions.toml
+    paths:
+      - .gradle/wrapper/
+      - .gradle/caches/
+      - android-sdk/
+    policy: pull-push
+
+# ── Android SDK install ───────────────────────────────────────────────────────
+.setup-sdk: &setup-sdk
+  before_script:
+    - apt-get update -qq && apt-get install -y -qq wget unzip python3 2>/dev/null
+    - |
+      if [ ! -d "$ANDROID_SDK_ROOT/cmdline-tools" ]; then
+        echo "Installing Android SDK..."
+        mkdir -p "$ANDROID_SDK_ROOT/cmdline-tools"
+        wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O /tmp/cmdtools.zip
+        unzip -q /tmp/cmdtools.zip -d /tmp/cmdtools_extracted
+        mv /tmp/cmdtools_extracted/cmdline-tools "$ANDROID_SDK_ROOT/cmdline-tools/latest"
+        rm -f /tmp/cmdtools.zip
+      fi
+    - export PATH="$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools"
+    - yes | sdkmanager --licenses > /dev/null 2>&1 || true
+    - sdkmanager "platforms;android-37" "build-tools;37.0.0" > /dev/null 2>&1 || true
+    - chmod +x gradlew
+
+# ── Lint ──────────────────────────────────────────────────────────────────────
+lint:
+  stage: validate
+  <<: *gradle-cache
+  <<: *setup-sdk
+  script:
+    - ./gradlew lint --no-daemon
+  artifacts:
+    when: always
+    paths:
+      - app/build/reports/lint-results-*.html
+    expire_in: 1 week
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH
+
+# ── Unit Tests ────────────────────────────────────────────────────────────────
+unit-test:
+  stage: test
+  <<: *gradle-cache
+  <<: *setup-sdk
+  script:
+    - ./gradlew test --no-daemon
+  artifacts:
+    when: always
+    reports:
+      junit: app/build/test-results/**/*.xml
+    paths:
+      - app/build/reports/tests/
+    expire_in: 1 week
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH
+
+# ── Debug Build ───────────────────────────────────────────────────────────────
+build-debug:
+  stage: build
+  <<: *gradle-cache
+  <<: *setup-sdk
+  script:
+    - ./gradlew assembleDebug --no-daemon
+  artifacts:
+    paths:
+      - app/build/outputs/apk/debug/*.apk
+    expire_in: 1 week
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_BRANCH == "develop"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+# ── Release Build (on tag) ────────────────────────────────────────────────────
+build-release:
+  stage: build
+  <<: *gradle-cache
+  <<: *setup-sdk
+  script:
+    - |
+      SIGNING_KEY="${ANDROID_SIGNING_KEY:-$KEYSTORE_BASE64}"
+      if [ -n "$SIGNING_KEY" ]; then
+        echo "$SIGNING_KEY" | base64 -d > app/release.keystore
+      fi
+    - ./gradlew assembleRelease bundleRelease --no-daemon
+  artifacts:
+    paths:
+      - app/build/outputs/apk/release/*.apk
+      - app/build/outputs/bundle/release/*.aab
+    expire_in: 30 days
+  rules:
+    - if: $CI_COMMIT_TAG =~ /^v.*/
+
+# ── Create Release ────────────────────────────────────────────────────────────
+gitlab-release:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  needs:
+    - job: build-release
+      artifacts: true
+  script:
+    - echo "Creating GitLab release for $CI_COMMIT_TAG"
+  release:
+    name:        "Release $CI_COMMIT_TAG"
+    description: "Auto-generated release for $CI_COMMIT_TAG"
+    tag_name:    "$CI_COMMIT_TAG"
+    assets:
+      links:
+        - name: "APK (release)"
+          url:  "$CI_PROJECT_URL/-/jobs/$CI_JOB_ID/artifacts/raw/app/build/outputs/apk/release/app-release.apk"
+  rules:
+    - if: $CI_COMMIT_TAG =~ /^v.*/
