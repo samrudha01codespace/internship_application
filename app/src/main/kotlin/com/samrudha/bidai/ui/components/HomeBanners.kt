@@ -1,5 +1,12 @@
 package com.samrudha.bidai.ui.components
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -26,9 +33,15 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
@@ -49,9 +62,11 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.Canvas
 import coil.compose.AsyncImage
 import com.samrudha.bidai.R
+import com.samrudha.bidai.ui.data.SampleHomeData
 import com.samrudha.bidai.ui.models.BannerUiModel
 import com.samrudha.bidai.ui.models.FeatureUiModel
 import com.samrudha.bidai.ui.models.TestimonialUiModel
+import kotlinx.coroutines.delay
 
 @Composable
 fun HomeTopBar(
@@ -82,6 +97,7 @@ fun HomeTopBar(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(4.dp),
             modifier = Modifier
+                .weight(1f)
                 .clip(RoundedCornerShape(8.dp))
                 .clickable(onClick = onLocationClick)
                 .padding(vertical = 4.dp, horizontal = 2.dp)
@@ -111,17 +127,15 @@ fun HomeTopBar(
             )
         }
 
-        Spacer(modifier = Modifier.weight(1f))
-
         TopBarIcon(R.drawable.ic_notifications, "Notifications", onNotifications)
         TopBarIcon(R.drawable.ic_favorite, "Favorites", onFavorites)
-        TopBarIcon(R.drawable.ic_grid_view, "Menu", onGrid)
+        TopBarIcon(R.drawable.ic_blog, "Blog", onGrid)
 
         Image(
             painter = painterResource(R.drawable.avatar_chip),
             contentDescription = "Profile",
             modifier = Modifier
-                .size(32.dp)
+                .size(36.dp)
                 .clip(CircleShape)
                 .background(Color(0xFFE5E7EB))
                 .clickable(onClick = onAvatar),
@@ -185,39 +199,13 @@ fun HomeSearchBar(
                         MaterialTheme.colorScheme.onSurface
                     )
                 )
-                val display = query.ifBlank { hint }
-                val emphasis = "Cars"
-                if (query.isBlank() && display.contains(emphasis)) {
-                    val before = display.substringBefore(emphasis).trimEnd()
-                    val after = display.substringAfter(emphasis).trimStart()
-                    val text = buildString {
-                        if (before.isNotEmpty()) append(before).append(' ')
-                        append(emphasis)
-                        if (after.isNotEmpty()) append(' ').append(after)
-                    }
-                    val start = text.indexOf(emphasis)
-                    val annotated = androidx.compose.ui.text.buildAnnotatedString {
-                        append(text)
-                        if (start >= 0) {
-                            addStyle(
-                                androidx.compose.ui.text.SpanStyle(fontWeight = FontWeight.Bold),
-                                start,
-                                start + emphasis.length
-                            )
-                        }
-                    }
-                    Text(
-                        text = annotated,
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        maxLines = 1
-                    )
+                if (query.isBlank()) {
+                    RotatingSearchHint()
                 } else {
                     Text(
-                        text = display,
+                        text = query,
                         style = MaterialTheme.typography.bodyLarge,
-                        color = if (query.isBlank()) MaterialTheme.colorScheme.onSurfaceVariant
-                        else MaterialTheme.colorScheme.onSurface,
+                        color = MaterialTheme.colorScheme.onSurface,
                         maxLines = 1
                     )
                 }
@@ -233,6 +221,62 @@ fun HomeSearchBar(
                     MaterialTheme.colorScheme.onSurface
                 )
             )
+        }
+    }
+}
+
+@Composable
+private fun RotatingSearchHint() {
+    val words = remember { SampleHomeData.categories.map { it.label } }
+    var index by remember { mutableIntStateOf(0) }
+
+    LaunchedEffect(words.size) {
+        if (words.isEmpty()) return@LaunchedEffect
+        while (true) {
+            delay(2000)
+            index = (index + 1) % words.size
+        }
+    }
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(0.dp)
+    ) {
+        Text(
+            text = stringResource(R.string.home_search_prefix) + " ",
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            maxLines = 1,
+            softWrap = false
+        )
+        if (words.isNotEmpty()) {
+            Box(
+                modifier = Modifier
+                    .height(28.dp)
+                    .clipToBounds()
+            ) {
+                AnimatedContent(
+                    targetState = index,
+                    modifier = Modifier.align(Alignment.Center),
+                    transitionSpec = {
+                        (slideInVertically(animationSpec = tween(350)) { it } + fadeIn(tween(350)))
+                            .togetherWith(
+                                slideOutVertically(animationSpec = tween(350)) { -it } + fadeOut(tween(350))
+                            )
+                    },
+                    label = "searchHint"
+                ) { i ->
+                    Text(
+                        text = words[i],
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        maxLines = 1,
+                        softWrap = false,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+            }
         }
     }
 }

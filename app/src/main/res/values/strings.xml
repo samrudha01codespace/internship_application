@@ -45,6 +45,7 @@
     <string name="home_sell_buy_title">Sell and buy every thing with BID.AI</string>
     <string name="home_testimonials">Transact with a trusted local community</string>
     <string name="home_search_hint">Search For Cars</string>
+    <string name="home_search_prefix">Search For</string>
     <string name="home_location_default">Taj Retreat, Bengaluru</string>
     <string name="home_see_all">See all</string>
     <string name="home_verified">Verified Product</string>

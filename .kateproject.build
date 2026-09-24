@@ -1,0 +1,43 @@
+{
+    "Auto_generated": "This file is auto-generated. Any extra tags or formatting will be lost",
+    "target_sets": [
+        {
+            "cmake_config": "",
+            "directory": "/home/jarvis/Projects/bidai",
+            "loaded_via_cmake": false,
+            "name": "Target Set",
+            "targets": [
+                {
+                    "build_cmd": "./gradlew installDebug && adb shell am start -n com.samrudha.offlineai/.SplashScreen",
+                    "name": "app",
+                    "run_cmd": ""
+                },
+                {
+                    "build_cmd": "./gradlew assembleDebug",
+                    "name": "Android",
+                    "run_cmd": ""
+                },
+                {
+                    "build_cmd": "./gradlew assembleDebug",
+                    "name": "Build",
+                    "run_cmd": ""
+                },
+                {
+                    "build_cmd": "./gradlew installDebug",
+                    "name": "Install",
+                    "run_cmd": ""
+                },
+                {
+                    "build_cmd": "./gradlew clean",
+                    "name": "Clean",
+                    "run_cmd": ""
+                },
+                {
+                    "build_cmd": "./gradlew installDebug && adb shell am start -n com.samrudha.offlineai/.SplashScreen",
+                    "name": "Run",
+                    "run_cmd": ""
+                }
+            ]
+        }
+    ]
+}

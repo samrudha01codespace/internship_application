@@ -61,40 +61,30 @@ fun AppBottomBar(
                     if (!selected) onNavigate(item.route)
                 },
                 icon = {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Image(
-                            painter = painterResource(item.iconRes),
-                            contentDescription = stringResource(item.labelRes),
-                            modifier = Modifier.size(22.dp),
-                            colorFilter = ColorFilter.tint(
-                                if (selected) MaterialTheme.colorScheme.primary
-                                else Color(0xFF9CA3AF)
-                            )
+                    Image(
+                        painter = painterResource(item.iconRes),
+                        contentDescription = stringResource(item.labelRes),
+                        modifier = Modifier.size(22.dp),
+                        colorFilter = ColorFilter.tint(
+                            if (selected) MaterialTheme.colorScheme.primary
+                            else Color(0xFF1F2937)
                         )
-                        if (selected) {
-                            Text(
-                                text = "•",
-                                style = MaterialTheme.typography.labelSmall,
-                                color = MaterialTheme.colorScheme.primary,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    }
+                    )
                 },
                 label = {
                     Text(
                         text = stringResource(item.labelRes),
                         style = MaterialTheme.typography.labelSmall,
                         color = if (selected) MaterialTheme.colorScheme.primary
-                        else Color(0xFF9CA3AF)
+                        else Color(0xFF1F2937)
                     )
                 },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.primary,
                     selectedTextColor = MaterialTheme.colorScheme.primary,
-                    unselectedIconColor = Color(0xFF9CA3AF),
-                    unselectedTextColor = Color(0xFF9CA3AF),
-                    indicatorColor = Color(0xFFD6E4FF)
+                    unselectedIconColor = Color(0xFF1F2937),
+                    unselectedTextColor = Color(0xFF1F2937),
+                    indicatorColor = Color.Transparent
                 ),
                 alwaysShowLabel = true
             )
