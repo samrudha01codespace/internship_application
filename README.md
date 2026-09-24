@@ -67,5 +67,12 @@ You can use either the legacy or modern naming — the build checks both (modern
 
 `com.samrudha.bidai`
 
+## Documentation
+
+| Document | Description |
+|----------|-------------|
+| [docs/tech-stack.md](docs/tech-stack.md) | Tech stack, architecture, screens, feature status |
+| [docs/flow-diagram.md](docs/flow-diagram.md) | App start, auth, sell, navigation, sequence flows (Mermaid) |
+
 ---
 *Scaffolded with [Android Project Generator](https://github.com/MaheshTechnicals/android-project-generator) by Mahesh Technicals*
