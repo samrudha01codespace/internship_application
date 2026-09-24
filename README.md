@@ -77,11 +77,6 @@ Base API URL is set in `NetworkModule` (`app/src/main/kotlin/.../data/NetworkMod
 | [docs/tech-stack.md](docs/tech-stack.md) | Tech stack, architecture, screens, feature status |
 | [docs/flow-diagram.md](docs/flow-diagram.md) | App start, auth, sell, navigation, sequence flows (Mermaid) |
 
-## CI/CD
-
-- **GitHub Actions** — lint, unit tests, debug/release builds on push. Release APK + AAB uploaded on tag push (`v*`).
-- **GitLab CI** — same pipeline with integrated GitLab Releases.
-
 ## Release
 
 Push a tag to trigger a release build:
@@ -90,20 +85,3 @@ Push a tag to trigger a release build:
 git tag v1.0.0
 git push origin v1.0.0
 ```
-
-### Required Secrets (for signed release builds)
-
-You can use either the legacy or modern naming — the build checks both (modern takes precedence).
-
-| Secret                    | Description                          |
-|---------------------------|--------------------------------------|
-| `ANDROID_SIGNING_KEY`     | Base64-encoded keystore file         |
-| `ANDROID_KEYSTORE_PASSWORD` | Keystore password                 |
-| `ANDROID_ALIAS`           | Key alias                            |
-| `ANDROID_KEY_PASSWORD`    | Key password                         |
-| `KEYSTORE_BASE64`         | *(legacy)* Base64-encoded keystore   |
-| `KEYSTORE_PASSWORD`       | *(legacy)* Keystore password         |
-| `KEY_ALIAS`               | *(legacy)* Key alias                 |
-| `KEY_PASSWORD`            | *(legacy)* Key password              |
-
-> **Note:** The modern `ANDROID_*` variables take priority over the legacy variables. If neither is set, the release build will be unsigned (uses debug keystore as fallback).
